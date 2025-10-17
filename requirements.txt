@@ -1,0 +1,15 @@
+# Web scraping
+requests
+beautifulsoup4
+lxml
+
+# Data handling / dates
+pandas
+python-dateutil
+tqdm
+
+# Machine learning pipeline
+numpy
+scipy
+scikit-learn
+joblib
