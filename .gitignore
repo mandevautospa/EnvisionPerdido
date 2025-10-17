@@ -1,0 +1,25 @@
+# OS / Editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv
+venv/
+.env
+.env.*
+.mypy_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node (if present)
+node_modules/
+dist/
+build/
+.cache/
+coverage/
