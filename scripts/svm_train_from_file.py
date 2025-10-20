@@ -128,7 +128,8 @@ def main():
     # keep labeled rows only
     if args.label not in df.columns:
         raise SystemExit(f"'{args.label}' column not found in {p}. Add 1/0 labels and retry.")
-    labeled_mask = df[args.label].astype(str).isin(["0", "1"])
+    # Handle both string and numeric labels (0, 1, 0.0, 1.0, "0", "1")
+    labeled_mask = df[args.label].astype(str).str.replace('.0', '', regex=False).isin(["0", "1"])
     df_l = df.loc[labeled_mask].copy()
     if df_l.empty:
         raise SystemExit("No labeled rows found. Fill some labels (1/0) and try again.")
