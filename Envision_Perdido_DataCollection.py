@@ -14,7 +14,8 @@ import json
 BASE = "https://business.perdidochamber.com"
 
 #Month view of calendar
-MONTH_URL = "https://business.perdidochamber.com/events/calendar"
+# MONTH_URL = "https://business.perdidochamber.com/events/calendar"
+MONTH_URL = "https://business.perdidochamber.com/events/calendar/2025-09-01"
 
 sess = requests.Session()
 sess.headers.update({
@@ -249,33 +250,33 @@ def save_events_csv(events: list[dict], path: str = "perdido_events.csv"):
             writer.writerow(rowify(event))
 
 if __name__ == "__main__":
-    print("[runner] starting scrape...", flush=True)
+    print("[runner] starting scrape for all months in 2025...", flush=True)
 
-    #  prove network works & page is reachable
-    try:
-        r = sess.get(MONTH_URL, timeout=15)
-        #status code 200 means the request was successful
-        print(f"[runner] GET {MONTH_URL} -> {r.status_code}, bytes={len(r.content)}", flush=True)
-    except Exception as e:
-        print(f"[runner] failed to reach month page: {e}", flush=True)
-
-    events = scrape_month(MONTH_URL)
-    print(f"[runner] scraped {len(events)} events", flush=True)
-
-    # Save to absolute paths so you know exactly where they land
-    OUT_DIR = "/Users/jacob/codeWorkspace/ResearchLab/EnvisionPerdido"
+    OUT_DIR = "C:\\Users\\scott\\UWF-Code\\EnvisionPerdido"
     os.makedirs(OUT_DIR, exist_ok=True)
-    json_path = os.path.join(OUT_DIR, "perdido_events.json")
-    csv_path  = os.path.join(OUT_DIR, "perdido_events.csv")
 
-    save_events_json(events, json_path)
-    save_events_csv(events, csv_path)
+    all_events = []
+    for month in range(1, 13):
+        month_str = f"2025-{month:02d}-01"
+        month_url = f"https://business.perdidochamber.com/events/calendar/{month_str}"
+        print(f"[runner] scraping {month_url}", flush=True)
+        try:
+            events = scrape_month(month_url)
+            print(f"[runner] scraped {len(events)} events from {month_url}", flush=True)
+            all_events.extend(events)
+        except Exception as e:
+            print(f"[runner] error scraping {month_url}: {e}", flush=True)
+
+    print(f"[runner] total events scraped: {len(all_events)}", flush=True)
+
+    json_path = os.path.join(OUT_DIR, "perdido_events_2025.json")
+    csv_path  = os.path.join(OUT_DIR, "perdido_events_2025.csv")
+
+    save_events_json(all_events, json_path)
+    save_events_csv(all_events, csv_path)
 
     print(f"[runner] wrote:\n  - {json_path}\n  - {csv_path}", flush=True)
     print("[done]", flush=True)
-    
-    #import subprocess, sys
-    #subprocess.run(sys.executable, "scripts/tag_events.py", check=True)
 
-    
+
 
