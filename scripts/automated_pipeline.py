@@ -28,12 +28,13 @@ import json
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from Envision_Perdido_DataCollection import scrape_month, save_events_csv, save_events_json
+# Import scraper from scripts directory
+from scripts.Envision_Perdido_DataCollection import scrape_month, save_events_csv, save_events_json
 
 # Configuration
 BASE_DIR = Path(__file__).parent.parent
-MODEL_PATH = BASE_DIR / "event_classifier_model.pkl"
-VECTORIZER_PATH = BASE_DIR / "event_vectorizer.pkl"
+MODEL_PATH = BASE_DIR / "data" / "artifacts" / "event_classifier_model.pkl"
+VECTORIZER_PATH = BASE_DIR / "data" / "artifacts" / "event_vectorizer.pkl"
 # Organized output path
 OUTPUT_DIR = BASE_DIR / "output" / "pipeline"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -86,7 +87,7 @@ def scrape_events(year=None, month=None):
         log(f"Scraping {month_url}...")
         
         try:
-            from Envision_Perdido_DataCollection import scrape_month
+            from scripts.Envision_Perdido_DataCollection import scrape_month
             events = scrape_month(month_url)
             log(f"Scraped {len(events)} events from {month_url}")
             all_events.extend(events)

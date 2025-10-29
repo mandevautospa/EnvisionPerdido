@@ -5,11 +5,17 @@ Merge manual labels with predicted labels and propagate within series.
 Priority: manual label > predicted label > propagate from series
 """
 import pandas as pd
+from pathlib import Path
 
 def main():
+    # Organized paths
+    base = Path(__file__).parent.parent
+    input_csv = base / "data" / "processed" / "combined_events.csv"
+    output_csv = base / "data" / "processed" / "combined_events_auto.csv"
+    
     # Load combined data
-    df = pd.read_csv('combined_events.csv')
-    print(f"Loaded {len(df)} events")
+    df = pd.read_csv(input_csv)
+    print(f"Loaded {len(df)} events from {input_csv}")
     
     # Step 1: Merge label and predicted_label (manual takes priority)
     df['final_label'] = df['label'].fillna(df['predicted_label'])
@@ -43,8 +49,8 @@ def main():
     df = df.drop(columns=['final_label'])
     
     # Save
-    df.to_csv('combined_events_auto.csv', index=False)
-    print(f"\nSaved to: combined_events_auto.csv")
+    df.to_csv(output_csv, index=False)
+    print(f"\nSaved to: {output_csv}")
     
     # Show summary
     print(f"\nLabel distribution:")

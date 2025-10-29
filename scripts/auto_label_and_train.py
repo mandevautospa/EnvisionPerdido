@@ -21,11 +21,11 @@ from sklearn.metrics import classification_report, accuracy_score
 
 # Paths
 BASE_DIR = Path(__file__).parent.parent
-EXISTING_LABELED = BASE_DIR / "combined_events_auto.csv"
-NEW_EVENTS = BASE_DIR / "perdido_events_2025.csv"
-OUTPUT_COMBINED = BASE_DIR / "perdido_events_2025_labeled.csv"
-MODEL_PATH = BASE_DIR / "event_classifier_model.pkl"
-VECTORIZER_PATH = BASE_DIR / "event_vectorizer.pkl"
+EXISTING_LABELED = BASE_DIR / "data" / "processed" / "combined_events_auto.csv"
+NEW_EVENTS = BASE_DIR / "data" / "raw" / "perdido_events_2025.csv"
+OUTPUT_COMBINED = BASE_DIR / "data" / "labeled" / "perdido_events_2025_labeled.csv"
+MODEL_PATH = BASE_DIR / "data" / "artifacts" / "event_classifier_model.pkl"
+VECTORIZER_PATH = BASE_DIR / "data" / "artifacts" / "event_vectorizer.pkl"
 
 def extract_series_id(uid):
     """Extract series_id from UID if it exists."""

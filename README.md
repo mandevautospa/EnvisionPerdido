@@ -1,130 +1,103 @@
-# EnvisionPerdido Project Structure
+# EnvisionPerdido - Automated Community Calendar System
 
-```
-EnvisionPerdido/
-├── docs/                              # All documentation
-│   ├── QUICKSTART.md
-│   ├── SETUP_GUIDE.md
-│   ├── WORDPRESS_INTEGRATION_GUIDE.md
-│   └── EVENTON_PLUGIN_INSTALL.md
-│
-├── scripts/                           # Python automation scripts
-│   ├── automated_pipeline.py          # Main pipeline: scrape → classify → email
-│   ├── wordpress_uploader.py          # Upload events to WordPress
-│   ├── health_check.py                # Health check for calendar/API
-│   ├── auto_label_and_train.py        # Training utilities
-│   ├── svm_train_from_file.py
-│   ├── svm_tag_events.py
-│   ├── events_to_labelset.py
-│   ├── smart_label_helper.py
-│   ├── merge_and_propagate_labels.py
-│   ├── fill_recurring_labels.py
-│   └── windows/                       # Windows-specific runners
-│       └── run_health_check.bat
-│
-├── data/                              # All data files (ignored in git)
-│   ├── raw/                           # Raw scraped data (perdido_events.csv, .json, .backup)
-│   ├── labeled/                       # Labeled training data (*_labeled.csv)
-│   ├── processed/                     # Intermediate processed data
-│   └── artifacts/                     # Model artifacts (.pkl files if stored here)
-│
-├── output/                            # Generated outputs (ignored in git)
-│   ├── pipeline/                      # Pipeline outputs (calendar_upload_*.csv, scraped_events_*.csv)
-│   └── logs/                          # Log files
-│
-├── plugins/                           # WordPress plugins
-│   ├── eventon-rest-api-meta.php      # EventON REST API meta fields plugin
-│   └── builds/                        # Built plugin ZIPs (ignored in git)
-│       └── eventon-rest-api-meta.zip
-│
-├── notebooks/                         # Jupyter notebooks
-│   └── EVP_SVM.ipynb                  # SVM experimentation notebook
-│
-├── .venvEnvisionPerdido/              # Python virtual environment (ignored in git)
-│
-├── Envision_Perdido_DataCollection.py # Main scraper module
-├── event_classifier_model.pkl         # Trained SVM model (96.47% accuracy)
-├── event_vectorizer.pkl               # TF-IDF vectorizer
-├── requirements.txt                   # Python dependencies
-├── .gitignore                         # Git ignore rules
-└── README.md                          # This file
-```
+Automated event classification and publishing system for the Perdido Key Chamber of Commerce community calendar.
 
-## Quick Navigation
+## Overview
 
-### Running the Pipeline
+This system automatically:
+1. Scrapes events from the Perdido Chamber website
+2. Classifies them as community/non-community using ML (96.47% accuracy)
+3. Sends email reviews with classified events
+4. Uploads approved events to the WordPress EventON calendar
+5. Monitors system health with automated checks
+
+## Quick Start
+
 ```powershell
+# Activate environment
 cd C:\Users\scott\UWF-Code\EnvisionPerdido
 .\.venvEnvisionPerdido\Scripts\Activate.ps1
+
+# Run the pipeline
 python scripts\automated_pipeline.py
-```
 
-### Uploading Events
-```powershell
+# Upload events to WordPress
 python scripts\wordpress_uploader.py
-```
 
-### Health Check
-```powershell
+# Health check
 python scripts\health_check.py
 ```
 
-### Documentation
-- **Getting Started**: `docs/QUICKSTART.md`
-- **Setup Instructions**: `docs/SETUP_GUIDE.md`
-- **WordPress Integration**: `docs/WORDPRESS_INTEGRATION_GUIDE.md`
-- **Plugin Installation**: `docs/EVENTON_PLUGIN_INSTALL.md`
+## Documentation
 
-## File Organization Rules
+All detailed documentation is in the `docs/` folder:
 
-### Data Files
-- **Raw scraped data** → `data/raw/`
-- **Labeled training data** → `data/labeled/`
-- **Model files (.pkl)** → Root or `data/artifacts/`
+- **[Project Structure](docs/PROJECT_STRUCTURE.md)** - Complete folder organization and file locations
+- **[Quick Start Guide](docs/QUICKSTART.md)** - Getting started with the system
+- **[Setup Guide](docs/SETUP_GUIDE.md)** - Initial setup and configuration
+- **[WordPress Integration](docs/WORDPRESS_INTEGRATION_GUIDE.md)** - Calendar upload workflow
+- **[EventON Plugin](docs/EVENTON_PLUGIN_INSTALL.md)** - WordPress plugin installation
+- **[SVM Usage](docs/SVM_USAGE_GUIDE.md)** - Model training and classification
 
-### Output Files
-- **Pipeline outputs** (calendar CSVs) → `output/pipeline/`
-- **Log files** → `output/logs/`
+## Project Structure
 
-### Scripts
-- **Python automation** → `scripts/`
-- **Windows batch files** → `scripts/windows/`
+```
+EnvisionPerdido/
+├── docs/           # All documentation
+├── scripts/        # Python automation scripts
+├── data/           # Raw, labeled, processed data + model artifacts
+├── output/         # Pipeline outputs and logs
+├── plugins/        # WordPress plugins
+├── notebooks/      # Jupyter notebooks
+└── tests/          # Test files
+```
 
-### Plugins
-- **WordPress plugins** → `plugins/`
-- **Built ZIPs** → `plugins/builds/`
+See [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md) for the complete structure.
 
-## Git Ignore Summary
-- All `output/` contents (CSVs, logs)
-- All `data/` contents (event CSVs, JSON)
-- Plugin builds (`plugins/builds/`)
-- Virtual environment (`.venvEnvisionPerdido/`)
-- Ad-hoc debug scripts (`check_*.py`, `compare_events.py`, etc.)
+## Key Features
 
-## System Overview
+- **96.47% Classification Accuracy** - Trained SVM model on 424 labeled events
+- **Fully Automated** - Scrape, classify, email, upload workflow
+- **Email Review System** - HTML emails with event statistics and CSV exports
+- **WordPress Integration** - Direct upload to EventON calendar via REST API
+- **Health Monitoring** - Automated checks with email alerts
+- **Organized Structure** - Clean folder organization for easy maintenance
 
-**Purpose**: Automated community event classification and calendar publishing
+## Requirements
 
-**Workflow**:
-1. Scrape events from Perdido Chamber website
-2. Classify using trained SVM model (96.47% accuracy)
-3. Send email review with community events
-4. Upload approved events to WordPress EventON calendar
-5. Health check monitors system integrity
+- Python 3.13+ with virtual environment
+- WordPress site with EventON plugin
+- Gmail account for email notifications (or SMTP server)
+- Windows Task Scheduler (for automation)
 
-**Key Components**:
-- **Scraper**: `Envision_Perdido_DataCollection.py`
-- **Model**: `event_classifier_model.pkl` + `event_vectorizer.pkl`
-- **Pipeline**: `scripts/automated_pipeline.py`
-- **Uploader**: `scripts/wordpress_uploader.py`
-- **Health Check**: `scripts/health_check.py`
-- **WordPress Plugin**: `plugins/eventon-rest-api-meta.php`
+See `requirements.txt` for Python dependencies.
+
+## Configuration
+
+Set these environment variables:
+
+```powershell
+# WordPress
+$env:WP_SITE_URL = "https://sandbox.envisionperdido.org"
+$env:WP_USERNAME = "your_username"
+$env:WP_APP_PASSWORD = "your_app_password"
+
+# Email
+$env:SMTP_SERVER = "smtp.gmail.com"
+$env:SMTP_PORT = "587"
+$env:SENDER_EMAIL = "your_email@gmail.com"
+$env:EMAIL_PASSWORD = "your_gmail_app_password"
+$env:RECIPIENT_EMAIL = "your_email@gmail.com"
+```
 
 ## Next Steps
 
-1. **Schedule automation**: Set up weekly Task Scheduler jobs
-2. **Persist credentials**: Set environment variables for email and WordPress
-3. **Monitor health**: Enable weekly health check emails
-4. **Optional optimizations**: Tune confidence thresholds, add more training data
+1. Review [docs/QUICKSTART.md](docs/QUICKSTART.md)
+2. Set up credentials (WordPress + Email)
+3. Test the pipeline
+4. Schedule automation with Task Scheduler
+5. Monitor via health checks
 
-For detailed instructions, see `docs/QUICKSTART.md`.
+## Support
+
+For detailed instructions, troubleshooting, and advanced configuration, see the documentation in the `docs/` folder.
