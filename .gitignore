@@ -35,3 +35,9 @@ output/pipeline/*.json
 check_*.py
 compare_events.py
 fix_eventon_metadata.py
+
+# Secrets (local env for automation; do not commit)
+scripts/windows/env.ps1
+
+# Local virtual environment
+.venvEnvisionPerdido/

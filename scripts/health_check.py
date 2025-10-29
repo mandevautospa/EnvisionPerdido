@@ -117,9 +117,18 @@ def check_calendar_page() -> Tuple[bool, str]:
         r = requests.get(url, timeout=20)
         if r.status_code != 200:
             return False, f"Calendar page {url} returned {r.status_code}"
-        html = r.text
-        # Heuristic: EventON calendar markup
-        if ("ajde_evcal" in html) or ("evo-calendar" in html) or ("evo_event" in html):
+        html = r.text or ""
+        hlow = html.lower()
+        # Heuristic: EventON calendar markup (broadened)
+        patterns = [
+            "ajde_evcal",        # core eventon class
+            "evo-calendar",      # eventon block/widget
+            "evo_event",         # event items
+            "evcal_list",        # list mode container
+            "evo_cal",           # calendar container
+            "eventon",           # plugin namespace
+        ]
+        if any(p in hlow for p in patterns):
             return True, "Calendar page markup detected"
         return False, "Calendar page loaded but no EventON markup found"
     except Exception as e:
@@ -141,7 +150,10 @@ def main() -> int:
     page_ok, page_msg = check_calendar_page()
     log(page_msg)
 
-    ok = api_ok and ev_ok and page_ok and (upcoming >= threshold)
+    # By default, treat the public page check as informational (not gating),
+    # since themes/caching can alter markup. Allow strict mode via env.
+    require_page = os.getenv("HEALTH_REQUIRE_PAGE", "false").lower() in {"true", "1", "yes"}
+    ok = api_ok and ev_ok and (upcoming >= threshold) and (page_ok or not require_page)
 
     if not ok:
         subject = "Community Calendar Health Check: ATTENTION Needed"
