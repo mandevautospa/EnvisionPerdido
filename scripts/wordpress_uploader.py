@@ -274,7 +274,10 @@ def main():
     
     # Find latest calendar upload file
     base_dir = Path(__file__).parent.parent
-    output_dir = base_dir / "pipeline_output"
+    # Check new organized path first, fall back to legacy
+    output_dir = base_dir / "output" / "pipeline"
+    if not output_dir.exists():
+        output_dir = base_dir / "pipeline_output"
     
     if not output_dir.exists():
         log(f"Output directory not found: {output_dir}")

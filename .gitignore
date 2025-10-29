@@ -23,3 +23,15 @@ dist/
 build/
 .cache/
 coverage/
+
+# Project-specific: organized structure
+plugins/builds/
+*.zip
+output/logs/
+output/pipeline/*.csv
+output/pipeline/*.json
+
+# Ignore ad-hoc debug scripts (contain creds; do not commit)
+check_*.py
+compare_events.py
+fix_eventon_metadata.py

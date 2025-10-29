@@ -34,8 +34,9 @@ from Envision_Perdido_DataCollection import scrape_month, save_events_csv, save_
 BASE_DIR = Path(__file__).parent.parent
 MODEL_PATH = BASE_DIR / "event_classifier_model.pkl"
 VECTORIZER_PATH = BASE_DIR / "event_vectorizer.pkl"
-OUTPUT_DIR = BASE_DIR / "pipeline_output"
-OUTPUT_DIR.mkdir(exist_ok=True)
+# Organized output path
+OUTPUT_DIR = BASE_DIR / "output" / "pipeline"
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # Email configuration (set these as environment variables for security)
 EMAIL_CONFIG = {
