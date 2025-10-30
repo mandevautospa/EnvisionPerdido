@@ -7,10 +7,10 @@ python scripts\automated_pipeline.py
 ```
 
 **What it does:**
-1. ✓ Scrapes events for **current month + next month** only
-2. ✓ Classifies using your **96.47% accurate ML model**
-3. ✓ Saves classified events to CSV in `output/pipeline/`
-4. ✓ Sends beautiful HTML email with:
+1.  Scrapes events for **current month + next month** only
+2.  Classifies using your **96.47% accurate ML model**
+3.  Saves classified events to CSV in `output/pipeline/`
+4.  Sends beautiful HTML email with:
    - Summary statistics
    - List of community events
    - Events flagged for review (low confidence)
@@ -19,7 +19,7 @@ python scripts\automated_pipeline.py
 ### Step 2: Review Email & Approve
 
 1. Check your inbox for "Community Event Review" email
-2. Review the events table (especially ones marked "⚠️ Review Needed")
+2. Review the events table (especially ones marked: "Review Needed")
 3. Download attached CSV if you want detailed info
 4. Make decision: approve or edit
 
@@ -101,10 +101,10 @@ To run automatically every Monday at 9 AM:
 
 ## Current System Status
 
-✅ **Model Accuracy**: 96.47%  
-✅ **Training Data**: 424 labeled events  
-✅ **Confidence Threshold**: 75% (lower = flagged for review)  
-✅ **Scraping**: Current month + next month only  
+ **Model Accuracy**: 96.47%  
+ **Training Data**: 424 labeled events  
+ **Confidence Threshold**: 75% (lower = flagged for review)  
+ **Scraping**: Current month + next month only  
 
 ---
 
@@ -123,7 +123,7 @@ To run automatically every Monday at 9 AM:
 A: No! The pipeline scrapes automatically. Just run `automated_pipeline.py`
 
 **Q: What if I want to review before uploading?**  
-A: Perfect! That's exactly how it works. Email → Review → Then manually run uploader.
+A: set AUTO_UPLOAD in env.ps1 to "false" for manual uploading.
 
 **Q: Can I change what months to scrape?**  
 A: Yes, it's set to current + next month. You can modify `scrape_events()` in the pipeline script.

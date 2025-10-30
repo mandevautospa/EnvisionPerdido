@@ -263,11 +263,11 @@ Common questions:
 ## Success Metrics
 
 You'll know it's working when:
-✓ Pipeline runs without errors
-✓ You receive regular email notifications  
-✓ Classification accuracy stays high (>90%)
-✓ Events appear correctly in WordPress
-✓ Website shows community events properly
+ Pipeline runs without errors
+ You receive regular email notifications  
+ Classification accuracy stays high (>90%)
+ Events appear correctly in WordPress
+ Website shows community events properly
 
 ---
 
@@ -276,4 +276,3 @@ You'll know it's working when:
 python scripts\wordpress_uploader.py
 ```
 
-This will guide you through the WordPress setup and test your connection!
