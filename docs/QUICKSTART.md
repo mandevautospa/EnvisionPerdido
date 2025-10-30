@@ -1,7 +1,5 @@
 # Community Calendar Automation - Quick Start Guide
 
-## Your Complete Workflow
-
 ### Step 1: Run the Automated Pipeline (Weekly/Monthly)
 
 ```powershell
@@ -11,8 +9,8 @@ python scripts\automated_pipeline.py
 **What it does:**
 1. ✓ Scrapes events for **current month + next month** only
 2. ✓ Classifies using your **96.47% accurate ML model**
-3. ✓ Saves classified events to CSV in `pipeline_output/`
-4. ✓ Sends beautiful HTML email to **mandevilleautospa@gmail.com** with:
+3. ✓ Saves classified events to CSV in `output/pipeline/`
+4. ✓ Sends beautiful HTML email with:
    - Summary statistics
    - List of community events
    - Events flagged for review (low confidence)
@@ -32,11 +30,11 @@ python scripts\wordpress_uploader.py
 ```
 
 **What it does:**
-1. ✓ Tests WordPress connection
-2. ✓ Shows you all events in dry-run mode (preview)
-3. ✓ Asks for your confirmation: "Upload these events? (yes/no)"
-4. ✓ Uploads as **DRAFTS** first (safe!)
-5. ✓ Asks if you want to publish: "Publish them? (yes/no)"
+1.  Tests WordPress connection
+2.  Shows you all events in dry-run mode (preview)
+3.  Asks for your confirmation: "Upload these events? (yes/no)"
+4.  Uploads as **DRAFTS** first (safe!)
+5.  Asks if you want to publish: "Publish them? (yes/no)"
 
 ---
 
@@ -55,9 +53,9 @@ To receive email notifications, you need a Gmail App Password:
 ### Set Environment Variables (PowerShell):
 
 ```powershell
-$env:SENDER_EMAIL = "mandevilleautospa@gmail.com"
+$env:SENDER_EMAIL = "your_email@gmail.com"
 $env:EMAIL_PASSWORD = "your_16_char_app_password"
-$env:RECIPIENT_EMAIL = "mandevilleautospa@gmail.com"
+$env:RECIPIENT_EMAIL = "your_email@gmail.com"
 ```
 
 **Make it permanent:**
@@ -70,7 +68,7 @@ $env:RECIPIENT_EMAIL = "mandevilleautospa@gmail.com"
 ## WordPress Setup (One-Time)
 
 ### Create WordPress Application Password:
-1. Login to: https://sandbox.envisionperdido.org/wp-admin
+1. Login to: https://your-wordpress-site.org/wp-admin
 2. Users → Your Profile
 3. Scroll to "Application Passwords"
 4. Name: "Event Uploader"
@@ -80,7 +78,7 @@ $env:RECIPIENT_EMAIL = "mandevilleautospa@gmail.com"
 ### Set Environment Variables (PowerShell):
 
 ```powershell
-$env:WP_SITE_URL = "https://sandbox.envisionperdido.org"
+$env:WP_SITE_URL = "https://your-wordpress-site.org"
 $env:WP_USERNAME = "your_wordpress_username"
 $env:WP_APP_PASSWORD = "xxxx xxxx xxxx xxxx xxxx xxxx"
 ```
@@ -95,9 +93,9 @@ To run automatically every Monday at 9 AM:
 2. Create Basic Task → "Community Events Pipeline"
 3. Trigger: Weekly, Monday, 9:00 AM
 4. Action: Start a program
-   - Program: `C:\Users\scott\UWF-Code\EnvisionPerdido\.venvEnvisionPerdido\Scripts\python.exe`
+   - Program: `path\to\EnvisionPerdido\.venvEnvisionPerdido\Scripts\python.exe`
    - Arguments: `scripts\automated_pipeline.py`
-   - Start in: `C:\Users\scott\UWF-Code\EnvisionPerdido`
+   - Start in: `path\to\EnvisionPerdido`
 
 ---
 
@@ -107,8 +105,6 @@ To run automatically every Monday at 9 AM:
 ✅ **Training Data**: 424 labeled events  
 ✅ **Confidence Threshold**: 75% (lower = flagged for review)  
 ✅ **Scraping**: Current month + next month only  
-✅ **Email**: mandevilleautospa@gmail.com  
-✅ **WordPress**: sandbox.envisionperdido.org (EventON)  
 
 ---
 
@@ -116,8 +112,8 @@ To run automatically every Monday at 9 AM:
 
 - **Pipeline Script**: `scripts/automated_pipeline.py`
 - **Uploader Script**: `scripts/wordpress_uploader.py`
-- **ML Model**: `event_classifier_model.pkl` (96.47% accurate)
-- **Output Files**: `pipeline_output/calendar_upload_*.csv`
+- **ML Model**: `data/artifacts/event_classifier_model.pkl` (96.47% accurate)
+- **Output Files**: `output/pipeline/calendar_upload_*.csv`
 
 ---
 

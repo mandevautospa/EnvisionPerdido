@@ -12,7 +12,7 @@ Chamber Website → Scrape Events → Classify with ML → Email Review → Uplo
 
 ### Step 1: Create WordPress Application Password
 
-1. Log into WordPress admin at: https://sandbox.envisionperdido.org/wp-admin
+1. Log into WordPress admin at: https://your-wordpress-site.org/wp-admin
 2. Go to **Users → Profile**
 3. Scroll down to **Application Passwords** section
 4. Enter a name: "Event Classification System"
@@ -26,7 +26,7 @@ In PowerShell, run these commands (replace with your actual values):
 
 ```powershell
 # WordPress credentials
-$env:WP_SITE_URL = "https://sandbox.envisionperdido.org"
+$env:WP_SITE_URL = "https://your-wordpress-site.org"
 $env:WP_USERNAME = "your_wordpress_username"
 $env:WP_APP_PASSWORD = "xxxx xxxx xxxx xxxx xxxx xxxx"
 
@@ -53,7 +53,7 @@ Create a batch file `run_pipeline.bat`:
 
 ```batch
 @echo off
-cd C:\Users\scott\UWF-Code\EnvisionPerdido
+cd path\to\EnvisionPerdido
 call .venvEnvisionPerdido\Scripts\activate.bat
 
 echo ========================================

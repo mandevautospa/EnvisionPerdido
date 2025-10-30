@@ -43,15 +43,15 @@ This will:
 3. Name: "Community Event Classification"
 4. Trigger: Weekly (e.g., every Monday at 9 AM)
 5. Action: Start a program
-   - Program: `C:\Users\scott\UWF-Code\EnvisionPerdido\.venvEnvisionPerdido\Scripts\python.exe`
+   - Program: `path\to\EnvisionPerdido\.venvEnvisionPerdido\Scripts\python.exe`
    - Arguments: `scripts\automated_pipeline.py`
-   - Start in: `C:\Users\scott\UWF-Code\EnvisionPerdido`
+   - Start in: `path\to\EnvisionPerdido`
 
 #### Option B: PowerShell Script
 Create a `.bat` file:
 ```batch
 @echo off
-cd C:\Users\scott\UWF-Code\EnvisionPerdido
+cd path\to\EnvisionPerdido
 call .venvEnvisionPerdido\Scripts\activate.bat
 python scripts\automated_pipeline.py
 ```

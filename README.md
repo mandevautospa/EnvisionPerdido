@@ -15,7 +15,7 @@ This system automatically:
 
 ```powershell
 # Activate environment
-cd C:\Users\scott\UWF-Code\EnvisionPerdido
+cd path\to\EnvisionPerdido
 .\.venvEnvisionPerdido\Scripts\Activate.ps1
 
 # Run the pipeline
@@ -78,7 +78,7 @@ Set these environment variables:
 
 ```powershell
 # WordPress
-$env:WP_SITE_URL = "https://sandbox.envisionperdido.org"
+$env:WP_SITE_URL = "https://your-site.org"
 $env:WP_USERNAME = "your_username"
 $env:WP_APP_PASSWORD = "your_app_password"
 
