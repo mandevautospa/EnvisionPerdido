@@ -43,9 +43,9 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 EMAIL_CONFIG = {
     "smtp_server": os.getenv("SMTP_SERVER", "smtp.gmail.com"),
     "smtp_port": int(os.getenv("SMTP_PORT", "587")),
-    "sender_email": os.getenv("SENDER_EMAIL", "mandevilleautospa@gmail.com"),
-    "sender_password": os.getenv("EMAIL_PASSWORD", "your_password"),
-    "recipient_email": os.getenv("RECIPIENT_EMAIL", "mandevilleautospa@gmail.com"),
+    "sender_email": os.getenv("SENDER_EMAIL", ""),
+    "sender_password": os.getenv("EMAIL_PASSWORD", ""),
+    "recipient_email": os.getenv("RECIPIENT_EMAIL", ""),
 }
 
 def log(message):
@@ -311,7 +311,7 @@ def upload_to_wordpress(csv_path):
     from wordpress_uploader import WordPressEventUploader
     
     # Get WordPress credentials from environment
-    site_url = os.getenv("WP_SITE_URL", "https://sandbox.envisionperdido.org")
+    site_url = os.getenv("WP_SITE_URL", "")
     username = os.getenv("WP_USERNAME", "")
     app_password = os.getenv("WP_APP_PASSWORD", "")
     
@@ -404,7 +404,7 @@ def send_upload_confirmation_email(community_events_df, created_ids, published_c
         </table>
         
         <p style="margin-top: 30px;">
-            View the calendar at: <a href="https://sandbox.envisionperdido.org/events">sandbox.envisionperdido.org/events</a>
+            View your calendar events online.
         </p>
         
         <p style="margin-top: 30px; color: #7f8c8d; font-size: 12px;">
