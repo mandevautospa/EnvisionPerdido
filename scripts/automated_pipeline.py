@@ -197,7 +197,7 @@ def generate_review_html(community_events_df, stats):
         confidence = event['confidence']
         confidence_class = 'high-confidence' if confidence >= 0.75 else 'low-confidence'
         row_class = 'review-needed' if event['needs_review'] else ''
-        status = '⚠️ Review Needed' if event['needs_review'] else '✓ High Confidence'
+        status = 'Review Needed' if event['needs_review'] else 'High Confidence'
         
         start_date = pd.to_datetime(event['start']).strftime("%b %d, %Y %I:%M %p") if pd.notna(event['start']) else 'N/A'
         location = event.get('location', 'N/A')
@@ -306,6 +306,133 @@ def export_for_calendar(community_events_df, format='csv'):
     
     return None
 
+def upload_to_wordpress(csv_path):
+    """Upload events to WordPress and return results."""
+    from wordpress_uploader import WordPressEventUploader
+    
+    # Get WordPress credentials from environment
+    site_url = os.getenv("WP_SITE_URL", "https://sandbox.envisionperdido.org")
+    username = os.getenv("WP_USERNAME", "")
+    app_password = os.getenv("WP_APP_PASSWORD", "")
+    
+    if not username or not app_password:
+        log("ERROR: WordPress credentials not configured")
+        return None, None
+    
+    log("Connecting to WordPress...")
+    uploader = WordPressEventUploader(site_url, username, app_password)
+    
+    if not uploader.test_connection():
+        log("ERROR: WordPress connection failed")
+        return None, None
+    
+    log("Uploading events to WordPress...")
+    created_ids = uploader.upload_events_from_csv(csv_path, dry_run=False)
+    
+    if not created_ids:
+        log("No events were uploaded")
+        return [], 0
+    
+    log(f"Publishing {len(created_ids)} events...")
+    published = uploader.publish_events(created_ids)
+    
+    return created_ids, published
+
+def send_upload_confirmation_email(community_events_df, created_ids, published_count):
+    """Send confirmation email with upload results."""
+    log("Sending upload confirmation email...")
+    
+    # Generate HTML for confirmation
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{ font-family: Arial, sans-serif; margin: 20px; }}
+            h1 {{ color: #2c3e50; }}
+            h2 {{ color: #34495e; margin-top: 30px; }}
+            .summary {{ background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin: 20px 0; }}
+            table {{ border-collapse: collapse; width: 100%; margin-top: 20px; }}
+            th {{ background-color: #3498db; color: white; padding: 12px; text-align: left; }}
+            td {{ padding: 10px; border-bottom: 1px solid #ddd; }}
+            tr:hover {{ background-color: #f5f5f5; }}
+            .success {{ color: #27ae60; font-weight: bold; }}
+        </style>
+    </head>
+    <body>
+    <h1>Community Events Published to Calendar</h1>
+        
+        <div class="summary">
+            <h2>Upload Summary</h2>
+            <p><strong>Total Events Uploaded:</strong> {len(created_ids)}</p>
+            <p><strong>Successfully Published:</strong> <span class="success">{published_count}</span></p>
+            <p><strong>Upload Date:</strong> {datetime.now().strftime("%B %d, %Y at %I:%M %p")}</p>
+        </div>
+        
+        <h2>Published Events</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Start Date</th>
+                    <th>Location</th>
+                    <th>Confidence</th>
+                </tr>
+            </thead>
+            <tbody>
+    """
+    
+    # Add event rows
+    for _, event in community_events_df.iterrows():
+        start_date = pd.to_datetime(event['start']).strftime("%b %d, %Y %I:%M %p") if pd.notna(event['start']) else 'N/A'
+        location = event.get('location', 'N/A')
+        if pd.isna(location):
+            location = 'N/A'
+        confidence = event.get('confidence', 0)
+        
+        html += f"""
+                <tr>
+                    <td><strong>{event['title']}</strong></td>
+                    <td>{start_date}</td>
+                    <td>{location}</td>
+                    <td>{confidence:.1%}</td>
+                </tr>
+        """
+    
+    html += """
+            </tbody>
+        </table>
+        
+        <p style="margin-top: 30px;">
+            View the calendar at: <a href="https://sandbox.envisionperdido.org/events">sandbox.envisionperdido.org/events</a>
+        </p>
+        
+        <p style="margin-top: 30px; color: #7f8c8d; font-size: 12px;">
+            This is an automated confirmation from the Community Event Classification System.
+        </p>
+    </body>
+    </html>
+    """
+    
+    # Create email message
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = f"Calendar Updated - {published_count} Community Events Published"
+    msg['From'] = EMAIL_CONFIG['sender_email']
+    msg['To'] = EMAIL_CONFIG['recipient_email']
+    msg.attach(MIMEText(html, 'html'))
+    
+    # Send email
+    try:
+        with smtplib.SMTP(EMAIL_CONFIG['smtp_server'], EMAIL_CONFIG['smtp_port']) as server:
+            server.starttls()
+            server.login(EMAIL_CONFIG['sender_email'], EMAIL_CONFIG['sender_password'])
+            server.send_message(msg)
+        log("Upload confirmation email sent successfully!")
+        return True
+    except Exception as e:
+        log(f"ERROR: Failed to send confirmation email: {e}")
+        return False
+
 def main():
     """Run the complete automated pipeline."""
     log("=" * 80)
@@ -347,7 +474,30 @@ def main():
             log("Email not configured. Skipping email notification.")
             log(f"Review file manually at: {calendar_csv}")
         
-        log("=" * 80)
+        # Step 6: Auto-upload to WordPress (if enabled)
+        auto_upload = os.getenv("AUTO_UPLOAD", "true").lower() in {"true", "1", "yes"}
+        
+        if auto_upload and len(community_events) > 0:
+            log("\n" + "=" * 80)
+            log("AUTO-UPLOAD ENABLED - Uploading to WordPress...")
+            log("=" * 80)
+            
+            created_ids, published_count = upload_to_wordpress(calendar_csv)
+            
+            if created_ids and published_count:
+                log(f"Successfully published {published_count} events to calendar")
+                send_upload_confirmation_email(community_events, created_ids, published_count)
+            elif created_ids is not None:
+                log("Upload completed but some events may not have published")
+            else:
+                log("Upload failed - check WordPress credentials and connection")
+        else:
+            log("\n" + "=" * 80)
+            log("AUTO_UPLOAD disabled - manual upload required")
+            log(f"Use: python scripts/wordpress_uploader.py {calendar_csv}")
+            log("=" * 80)
+        
+        log("\n" + "=" * 80)
         log("PIPELINE COMPLETE!")
         log("=" * 80)
         

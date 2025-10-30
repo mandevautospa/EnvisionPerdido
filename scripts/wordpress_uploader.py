@@ -46,17 +46,17 @@ class WordPressEventUploader:
             
             if response.status_code == 200:
                 user_data = response.json()
-                log(f"✓ Connected as: {user_data.get('name', 'Unknown')}")
+                log(f"OK: Connected as: {user_data.get('name', 'Unknown')}")
                 return True
             elif response.status_code == 401:
-                log("✗ Authentication failed! Check username and app password.")
+                log("ERROR: Authentication failed! Check username and app password.")
                 return False
             else:
-                log(f"✗ API error: {response.status_code}")
+                log(f"ERROR: API error: {response.status_code}")
                 return False
                 
         except Exception as e:
-            log(f"✗ Connection error: {e}")
+            log(f"ERROR: Connection error: {e}")
             return False
     
     def get_event_locations(self):
@@ -101,10 +101,10 @@ class WordPressEventUploader:
         """Parse event data into EventON metadata format."""
         metadata = {}
         
-        # Event start and end times
+        # Event start and end times (cast to strings for REST schema)
         if pd.notna(event_row.get('start')):
             start_dt = pd.to_datetime(event_row['start'])
-            metadata['evcal_srow'] = int(start_dt.timestamp())
+            metadata['evcal_srow'] = str(int(start_dt.timestamp()))
             metadata['evcal_start_date'] = start_dt.strftime('%Y-%m-%d')
             metadata['evcal_start_time_hour'] = start_dt.strftime('%I')
             metadata['evcal_start_time_min'] = start_dt.strftime('%M')
@@ -112,7 +112,7 @@ class WordPressEventUploader:
         
         if pd.notna(event_row.get('end')):
             end_dt = pd.to_datetime(event_row['end'])
-            metadata['evcal_erow'] = int(end_dt.timestamp())
+            metadata['evcal_erow'] = str(int(end_dt.timestamp()))
             metadata['evcal_end_date'] = end_dt.strftime('%Y-%m-%d')
             metadata['evcal_end_time_hour'] = end_dt.strftime('%I')
             metadata['evcal_end_time_min'] = end_dt.strftime('%M')
@@ -158,15 +158,15 @@ class WordPressEventUploader:
             
             if response.status_code == 201:
                 event_data = response.json()
-                log(f"✓ Created event: {title} (ID: {event_data['id']})")
+                log(f"OK: Created event: {title} (ID: {event_data['id']})")
                 return event_data['id']
             else:
-                log(f"✗ Failed to create event '{title}': {response.status_code}")
+                log(f"ERROR: Failed to create event '{title}': {response.status_code}")
                 log(f"   Response: {response.text[:200]}")
                 return None
                 
         except Exception as e:
-            log(f"✗ Error creating event '{event_row.get('title', 'Unknown')}': {e}")
+            log(f"ERROR: Error creating event '{event_row.get('title', 'Unknown')}': {e}")
             return None
     
     def upload_events_from_csv(self, csv_path, dry_run=True):
@@ -314,7 +314,7 @@ def main():
             response = input(f"\n{len(created_ids)} events created as DRAFTS. Publish them? (yes/no): ").strip().lower()
             if response == 'yes':
                 uploader.publish_events(created_ids)
-                log("✓ Upload complete! Check your WordPress calendar.")
+                log("OK: Upload complete! Check your WordPress calendar.")
             else:
                 log("Events saved as drafts. You can publish them manually in WordPress.")
     else:
