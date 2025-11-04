@@ -1,6 +1,6 @@
 # EnvisionPerdido - Automated Community Calendar System
 
-Automated event classification and publishing system for the Envision Perdido Non-profit organization community calendar.
+Automated event classification and publishing system for the Envision Perdido non-profit organization community calendar.
 
 ## Overview
 
