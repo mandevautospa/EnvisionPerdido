@@ -64,7 +64,7 @@ out.to_csv(OUT_RAW, index=False)
 labelset = out[["event_id","title","description","start_time","location","url"]].copy()
 text = (labelset["title"].fillna("") + " " + labelset["description"].fillna("")).str.lower()
 
-community_kw = r"(festival|parade|market|farmers|community|workshop|class|volunteer|fundraiser|family|youth|meetup|open house|concert|library|park|veterans|food truck|gallery|art\\b|craft\\b)"
+community_kw = r"(festival|parade|market|farmers|community|workshop|class|volunteer|fundraiser|family|youth|meetup|open house|concert|perdidopalooza|library|park|veterans|food truck|gallery|art\\b|craft\\b)"
 noncomm_kw = r"(ribbon cutting|board meeting|committee|webinar|sponsor|chamber members|leads? group|business after hours|b2b|networking)"
 
 labelset["weak_label"] = None
