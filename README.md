@@ -6,7 +6,7 @@ Automated event classification and publishing system for the Envision Perdido no
 
 This system automatically:
 1. Scrapes events from the Perdido Chamber website
-2. Classifies them as community/non-community using ML (96.47% accuracy)
+2. Classifies them as community/non-community using Support Vector Machine (SVM) ML model (96.47% accuracy)
 3. Sends email reviews with classified events
 4. Uploads approved events to the WordPress EventON calendar
 5. Monitors system health with automated checks
