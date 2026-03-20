@@ -8,5 +8,5 @@ PY_WRAPPER="$BASE_DIR/scripts/run_with_venv.sh"
 if [ -x "$PY_WRAPPER" ]; then
   "$PY_WRAPPER" scripts/maintenance/delete_all_events.py "${@:-}"
 else
-  python scripts/maintenance/delete_all_events.py "${@:-}"
+  python3 scripts/maintenance/delete_all_events.py "${@:-}"
 fi

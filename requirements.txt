@@ -9,7 +9,7 @@ tqdm
 numpy
 pandas
 scipy
-scikit-learn==1.8.0
+scikit-learn>=1.6.0
 joblib
 
 # WordPress integration

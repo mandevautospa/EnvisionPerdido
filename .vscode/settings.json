@@ -1,9 +1,15 @@
 {
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venvEnvisionPerdido/bin/python",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.analysis.extraPaths": [
     "./"
   ],
   "editor.formatOnSave": false,
+  "python.terminal.executeInFileDir": true,
+  "python.terminal.focusAfterLaunch": true,
+  "python.terminal.useEnvFile": true,
+  "terminal.integrated.env.osx": {
+    "PATH": "${workspaceFolder}/.venv/bin:${env:PATH}"
+  },
   "python-envs.pythonProjects": [
     {
       "path": "",
@@ -18,6 +24,6 @@
     "-p",
     "*test.py"
   ],
-  "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "python.testing.unittestEnabled": false
 }
